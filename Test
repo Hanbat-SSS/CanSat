@@ -1,0 +1,134 @@
+// 이 파일은 그저 테스트 용으로 아래의 코드는 현재 cansat에 탑재되어 있는 gps및 통신부 아두이노(C++)코드입니다.
+// 깃허브 저장소로 파일을 저장하고, 편집하는 연습을 위한 코드로 누구든 건드려도 상관 없는 코드입니다.
+
+#include <SPI.h>       
+#include <LoRa.h>
+#include <Wire.h>
+#include <SoftwareSerial.h>
+#include <TinyGPS.h>
+
+const long frequency = 433E6;  
+const int csPin = 10;          
+const int resetPin = 9;        
+const int irqPin = 2;          
+
+SoftwareSerial gpsSerial(2, 3); // RX, TX
+TinyGPS gps;
+
+int i = 0;
+
+void LoRa_sendMessage(String message);
+
+void setup() {
+  Serial.begin(9600);                   
+  while (!Serial);
+
+  gpsSerial.begin(9600);
+  LoRa.setPins(csPin, resetPin, irqPin);
+
+  if (!LoRa.begin(frequency)) {
+    Serial.println("LoRa init failed. Check your connections.");
+    while (true);                       
+  }
+
+  Serial.println("LoRa init succeeded.");
+  Serial.println();
+  Serial.println("LoRa Simple Node with GPS");
+  Serial.println("Tx: invertIQ disable");
+  Serial.println("Rx: invertIQ enable");
+  Serial.println();
+
+  LoRa.onReceive(onReceive);
+  LoRa.onTxDone(onTxDone);
+  LoRa_rxMode();
+}
+
+void loop() {
+  if (i == 7) {
+    Serial.println("Dobby is free");
+  }
+  
+  bool newData = false;
+  unsigned long chars;
+  unsigned short sentences, failed;
+
+  // For one second we parse GPS data and report some key values
+  for (unsigned long start = millis(); millis() - start < 1000;)
+  {
+    while (gpsSerial.available())
+    {
+      char c = gpsSerial.read();
+      // Serial.write(c); // uncomment this line if you want to see the GPS data flowing
+      if (gps.encode(c)) // Did a new valid sentence come in?
+        newData = true;
+    }
+  }
+
+  if (newData)
+  {
+    float flat, flon;
+    gps.f_get_position(&flat, &flon);
+    Serial.print("Latitude:");
+    Serial.print(flat == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flat, 6);
+    Serial.print(", Longitude:");
+    Serial.print(flon == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flon, 6);
+    Serial.print("");
+  }
+  gps.stats(&chars, &sentences, &failed);
+  if (chars == 0) {
+    Serial.println("** No characters received from GPS: check wiring **");
+  }
+  delay(5000);
+  i++;
+}
+
+void onReceive(int packetSize) {
+  String message = "";
+
+  while (LoRa.available()) {
+    message += (char)LoRa.read();
+  }
+
+  Serial.print("\nNode Receive: ");
+  Serial.println(message);
+  
+  float flat, flon;
+  
+  gps.f_get_position(&flat, &flon);
+  message = createMessage(flat, flon);
+  LoRa_sendMessage(message); 
+ 
+  i = 0;
+}
+
+void onTxDone() {
+  Serial.println("TxDone");
+  LoRa_rxMode();
+}
+
+void LoRa_rxMode(){
+  LoRa.enableInvertIQ();                
+  LoRa.receive();                       
+}
+
+void LoRa_sendMessage(String message) {
+  LoRa_txMode();                        
+  LoRa.beginPacket();                   
+  LoRa.print(message);                  
+  LoRa.endPacket(true);                 
+}
+
+void LoRa_txMode(){
+  LoRa.idle();                          
+  LoRa.disableInvertIQ();               
+}
+
+String createMessage(float latitude, float longitude) {
+  
+  if (latitude == 1000.0 || longitude == 1000.0){
+    return "no gps data \n0,0";
+  }
+  else{
+    return "Latitude: " + String(latitude, 6) + "\nLongitude: " + String(longitude, 6);
+  }  
+}
