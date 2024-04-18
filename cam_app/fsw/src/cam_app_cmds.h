@@ -35,5 +35,8 @@ CFE_Status_t CAM_APP_ResetCountersCmd(const CAM_APP_ResetCountersCmd_t *Msg);
 CFE_Status_t CAM_APP_ProcessCmd(const CAM_APP_ProcessCmd_t *Msg);
 CFE_Status_t CAM_APP_NoopCmd(const CAM_APP_NoopCmd_t *Msg);
 CFE_Status_t CAM_APP_DisplayParamCmd(const CAM_APP_DisplayParamCmd_t *Msg);
+CFE_Status_t CAM_APP_ShotPeriodCmd(const CAM_APP_ShotPeriodCmd_t *Msg);
+CFE_Status_t CAM_APP_ShotStartCmd(const CAM_APP_ShotStartCmd_t *Msg);
+CFE_Status_t CAM_APP_ShotStopCmd(const CAM_APP_ShotStopCmd_t *Msg);
 
 #endif /* CAM_APP_CMDS_H */

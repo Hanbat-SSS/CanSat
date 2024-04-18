@@ -93,7 +93,22 @@
         <ConstraintSet>
           <ValueConstraint entry="Sec.FunctionCode" value="4" />
         </ConstraintSet>
-      </ContainerDataType>      
+        <EntryList>
+          <Entry type="DisplayParam_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="ShotStartCmd" baseType="CommandBase">
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="5" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="ShotStopCmd" baseType="CommandBase">
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="6" />
+        </ConstraintSet>
+      </ContainerDataType>
 
       <!-- Note the type name here must be "ExampleTable" to match the C table definition file,
            but the source code uses the type "ExampleTable" -->

@@ -36,6 +36,14 @@ typedef struct CAM_APP_DisplayParam_Payload
     char   ValStr[CAM_APP_STRING_VAL_LEN]; /**< An example string */
 } CAM_APP_DisplayParam_Payload_t;
 
+
+typedef struct CAM_APP_ShotPeriod_Payload
+{
+    uint32 ValU32;                            /**< 32 bit unsigned integer value */
+    int16  ValI16;                            /**< 16 bit signed integer value */
+    char   ValStr[CAM_APP_STRING_VAL_LEN]; /**< An example string **/
+} CAM_APP_ShotPeriod_Payload_t;
+
 /*************************************************************************/
 /*
 ** Type definition (Cam App housekeeping)
@@ -45,7 +53,7 @@ typedef struct CAM_APP_HkTlm_Payload
 {
     uint8 CommandErrorCounter;
     uint8 CommandCounter;
-    uint8 spare[2];
+    uint16 spare[2];
 } CAM_APP_HkTlm_Payload_t;
 
 #endif

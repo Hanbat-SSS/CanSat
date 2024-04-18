@@ -41,7 +41,10 @@ static const EdsDispatchTable_CAM_APP_Application_CFE_SB_Telecommand_t CAM_TC_DI
     .CMD     = {.NoopCmd_indication          = CAM_APP_NoopCmd,
             .ResetCountersCmd_indication = CAM_APP_ResetCountersCmd,
             .ProcessCmd_indication       = CAM_APP_ProcessCmd,
-            .DisplayParamCmd_indication  = CAM_APP_DisplayParamCmd},
+            .DisplayParamCmd_indication  = CAM_APP_DisplayParamCmd,
+            .ShotPeriod_indication       = CAM_APP_ShotPeriodCmd,
+            .ShotStart_indication        = CAM_APP_ShotStartCmd,
+            .ShotStop_indication         = CAM_APP_ShotStopCmd,}
     .SEND_HK = {.indication = CAM_APP_SendHkCmd}};
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/

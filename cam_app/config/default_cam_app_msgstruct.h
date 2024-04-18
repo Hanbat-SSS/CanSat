@@ -62,9 +62,25 @@ typedef struct
 
 typedef struct
 {
-    CFE_MSG_CommandHeader_t           CommandHeader; /**< \brief Command header */
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
     CAM_APP_DisplayParam_Payload_t Payload;
 } CAM_APP_DisplayParamCmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
+    CAM_APP_ShotPeriod_Payload_t Payload;
+} CAM_APP_ShotPeriodCmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
+} CAM_APP_ShotStartCmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
+} CAM_APP_ShotStopCmd_t;
 
 /*************************************************************************/
 /*

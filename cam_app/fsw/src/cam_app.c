@@ -32,6 +32,9 @@
 #include "cam_app_tbl.h"
 #include "cam_app_version.h"
 
+#include "time.h"
+#include "unistd.h"
+
 /*
 ** global data
 */
@@ -84,6 +87,9 @@ void CAM_APP_Main(void)
         if (status == CFE_SUCCESS)
         {
             CAM_APP_TaskPipe(SBBufPtr);
+
+            //main clode in here
+            
         }
         else
         {

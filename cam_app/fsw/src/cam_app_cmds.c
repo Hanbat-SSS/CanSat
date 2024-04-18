@@ -35,6 +35,9 @@
 
 /* The cam_lib module provides the CAM_Function() prototype */
 #include "cam_lib.h"
+#include "time.h"
+#include "unistd.h"
+#include "pthread.h"
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
 /*                                                                            */
@@ -155,5 +158,90 @@ CFE_Status_t CAM_APP_DisplayParamCmd(const CAM_APP_DisplayParamCmd_t *Msg)
                       "CAM_APP: ValU32=%lu, ValI16=%d, ValStr=%s", (unsigned long)Msg->Payload.ValU32,
                       (int)Msg->Payload.ValI16, Msg->Payload.ValStr);
 
+    return CFE_SUCCESS;
+}
+
+CFE_Status_t CAM_APP_ShotPeriodCmd(const CAM_APP_ShotPeriodCmd_t *Msg)
+{
+    //process for Shot_Period_Cmd
+
+    //CFE_EVS_SendEvent
+    
+   
+
+    return CFE_SUCCESS; 
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+/*                                                                            */
+/* A Cam_app Start, Stop Process to using thread                              */
+/*                                                                            */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
+int Stop_Command;
+pthread_t thread;
+
+void *startloop(void *arg)
+{
+    while (1)
+    {
+        if(Stop_Command == 1)
+        {
+            break;
+        }
+        else
+        {
+            time_t t = time(NULL);
+            struct tm *now = localtime(&t);
+
+            char timestamp[20];
+            strftime(timestamp, sizeof(timestamp), "%Y%m%d_%H:%M:%S", now);
+
+            char filename[50];
+            sprintf(filename, "photo_%s.jpg", timestamp);
+
+            char command[200];
+            sprintf(command, "libcamera-jpeg -o /home/CFS/photo/%s -t 2000 --width 640 --height 480", filename);
+
+            printf("Executing command: %s\n", command);
+
+            system(command);
+
+            sleep(10);
+        }
+    }
+    pthread_exit(NULL);
+}
+
+void stoploop(void)
+{
+    Stop_Command = 1;
+}
+
+CFE_Status_t CAM_APP_ShotStartCmd(const CAM_APP_ShotStartCmd_t *Msg)
+{    
+    
+
+    Stop_Command = 0;
+
+    if(pthread_create(&thread, NULL, startloop, NULL))
+    {
+        perror("pthread_Create");
+        exit(EXIT_FAILURE);
+    }
+    
+    CFE_EVS_SendEvent(CAM_APP_SHOT_START_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM: Image Shot Start");
+    return CFE_SUCCESS; 
+}
+
+CFE_Status_t CAM_APP_ShotStopCmd(const CAM_APP_ShotStopCmd_t *Msg)
+{
+    //process from Shot_Stop_Cmd
+    //CFE_EVS_StopEvent
+
+    stoploop();
+    pthread_join(thread, NULL);
+    CFE_EVS_SendEvent(CAM_APP_SHOT_STOP_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM: Send Stop_Command");
+    
     return CFE_SUCCESS;
 }

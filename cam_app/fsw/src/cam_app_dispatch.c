@@ -109,6 +109,27 @@ void CAM_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
                 CAM_APP_DisplayParamCmd((const CAM_APP_DisplayParamCmd_t *)SBBufPtr);
             }
             break;
+ 
+        case CAM_APP_SHOT_PERIOD_CC:
+            if (CAM_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CAM_APP_ShotPeriodCmd_t)))
+            {
+                CAM_APP_ShotPeriodCmd((const CAM_APP_ShotPeriodCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CAM_APP_SHOT_START_CC:
+            if (CAM_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CAM_APP_ShotStartCmd_t)))
+            {
+                CAM_APP_ShotStartCmd((const CAM_APP_ShotStartCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CAM_APP_SHOT_STOP_CC:
+            if (CAM_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CAM_APP_ShotStopCmd_t)))
+            {
+                CAM_APP_ShotStopCmd((const CAM_APP_ShotStopCmd_t *)SBBufPtr);
+            }
+            break;
 
         /* default case already found during FC vs length test */
         default:

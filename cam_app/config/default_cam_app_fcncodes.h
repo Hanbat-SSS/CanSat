@@ -40,5 +40,7 @@
 #define CAM_APP_PROCESS_CC        2
 #define CAM_APP_DISPLAY_PARAM_CC  3
 #define CAM_APP_SHOT_PERIOD_CC    4
+#define CAM_APP_SHOT_START_CC     5
+#define CAM_APP_SHOT_STOP_CC      6
 
 #endif
