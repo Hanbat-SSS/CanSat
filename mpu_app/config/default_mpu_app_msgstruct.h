@@ -71,6 +71,11 @@ typedef struct
     CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command Header */
 } MPU_APP_ReadingCmd_t;
 
+typedef struct 
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command Header */
+} MPU_APP_Stop_ReadingCmd_t;
+
 /*************************************************************************/
 /*
 ** Type definition (Mpu App housekeeping)

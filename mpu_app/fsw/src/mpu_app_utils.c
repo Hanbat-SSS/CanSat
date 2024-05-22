@@ -31,7 +31,7 @@
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* Verify contents of First Example Table buffer contents                  */
+/* Verify contents of First Example Table buffer contents          */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 CFE_Status_t MPU_APP_TblValidationFunc(void *TblData)

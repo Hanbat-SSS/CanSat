@@ -33,6 +33,16 @@
 #include "mpu_app_utils.h"
 #include "mpu_app_msg.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
+#include <stdint.h>
+#include <math.h>
+#include <pthread.h>
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
 /*                                                                            */
 /*  Purpose:                                                                  */
@@ -70,7 +80,7 @@ CFE_Status_t MPU_APP_SendHkCmd(const MPU_APP_SendHkCmd_t *Msg)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
 /*                                                                            */
-/* MPU NOOP commands                                                       */
+/* MPU NOOP commands                                                          */
 /*                                                                            */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
 CFE_Status_t MPU_APP_NoopCmd(const MPU_APP_NoopCmd_t *Msg)
@@ -154,13 +164,111 @@ CFE_Status_t MPU_APP_DisplayParamCmd(const MPU_APP_DisplayParamCmd_t *Msg)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
 /*                                                                              */
-/* A Mpu data reading command                                                   */
+/* A Mpu data reading and stop command                                                   */
 /*                                                                              */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+int Stop_Command;
+pthread_t thread;
+float mpu[6] = {0, 0, 0, 0, 0, 0};
+
+void *startloop(void *arg)
+{
+    int file;
+    const char *bus = "/dev/i2c-1";
+    if ((file = open(bus, O_RDWR)) < 0) {
+        perror("Failed to open the I2C bus");
+        exit(1);
+    }
+    ioctl(file, I2C_SLAVE, 0x68);
+
+    const char buf[2] = {0x6B, 0};
+    if (write(file, buf, 2) != 2) {
+        perror("Failed to initialize MPU6050");
+        exit(1);
+    }
+    
+    while (1) 
+    {
+        if (Stop_Command == 1) 
+        {
+        break;
+        } 
+        else 
+        {
+            char reg = 0x3B;
+            if (write(file, &reg, 1) != 1) {
+                perror("Failed to set register address");
+                exit(1);
+            }
+            char data[14];
+            if (read(file, data, 14) != 14) {
+                perror("Failed to read from the I2C bus");
+                exit(1);
+            }
+
+            // Convert accelerometer data
+            int16_t raw_ax = (data[0] << 8) | data[1];
+            int16_t raw_ay = (data[2] << 8) | data[3];
+            int16_t raw_az = (data[4] << 8) | data[5];
+
+            // Convert gyroscope data
+            int16_t raw_gx = (data[8] << 8) | data[9];
+            int16_t raw_gy = (data[10] << 8) | data[11];
+            int16_t raw_gz = (data[12] << 8) | data[13];
+            
+            //Divide raw value by sensitivity scale factor
+            float gx = raw_gx / 131.0;
+            float gy = raw_gy / 131.0;
+            float gz = raw_gz / 131.0;
+            
+            float ax = raw_ax / 16384.0;
+            float ay = raw_ay / 16384.0;
+            float az = raw_az / 16384.0;
+
+            mpu[0]=ax;
+            mpu[1]=ay;
+            mpu[2]=az;
+            mpu[3]=gx;
+            mpu[4]=gy;
+            mpu[5]=gz;
+
+            printf("\n x_accel %.3fg      y_accel %.3fg      z_accel %.3fg     \r", ax, ay, az);
+            printf("\n x_gyro %.2f °/s    y_gyro %.2f °/s    z_gyro %.2f °/s    \r", gx, gy, gz);
+
+            usleep(50000);
+        }
+    }
+    close(file);
+    pthread_exit(NULL);
+    return mpu;
+}
+
+void stoploop(void)
+{
+    Stop_Command = 1;
+}
 
 CFE_Status_t MPU_APP_ReadingCmd(const MPU_APP_ReadingCmd_t *Msg)
 {
-    /* MPU parsing code*/
+    CFE_EVS_SendEvent(MPU_APP_RESET_INF_EID, CFE_EVS_EventType_INFORMATION, "MPU: RESET command");
 
+    Stop_Command = 0;
+
+    if(pthread_create(&thread, NULL, startloop, NULL))
+    {
+        perror("pthread_Create");
+        exit(EXIT_FAILURE);
+    }
+    
+    CFE_EVS_SendEvent(MPU_APP_READING_INF_EID, CFE_EVS_EventType_INFORMATION, "MPU: Reading Accel and Gyro\nax : %f  ay : %f  az : %f\ngx : %f  gy : %f  gz : %f",mpu[0], mpu[1], mpu[2], mpu[3], mpu[4], mpu[5]);
+    return CFE_SUCCESS;
+}
+
+CFE_Status_t MPU_APP_Stop_ReadingCmd(const MPU_APP_Stop_ReadingCmd_t *Msg)
+{
+    stoploop();
+    pthread_join(thread, NULL);
+    CFE_EVS_SendEvent(MPU_APP_STOP_READING_INF_EID, CFE_EVS_EventType_INFORMATION, "MPU: Stop_Reading Accel and Gyro");
+    
     return CFE_SUCCESS;
 }

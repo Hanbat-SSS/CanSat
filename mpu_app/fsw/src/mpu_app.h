@@ -53,6 +53,18 @@ typedef struct
     uint8 ErrCounter;
 
     /*
+    ** Sensor Reading Values...
+    */
+    uint8 accel;
+    uint8 gyro;
+
+
+    /*
+    ** Snesor Reading telemtry packet...
+    */
+    MPU_APP_ReadingCmd_t Reading;
+
+    /*
     ** Housekeeping telemetry packet...
     */
     MPU_APP_HkTlm_t HkTlm;

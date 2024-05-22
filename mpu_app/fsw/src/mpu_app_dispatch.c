@@ -117,6 +117,13 @@ void MPU_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             }
             break;
 
+        case MPU_APP_STOP_READING_CC:
+            if(MPU_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(MPU_APP_Stop_ReadingCmd_t)))
+            {
+                MPU_APP_Stop_ReadingCmd((const MPU_APP_Stop_ReadingCmd_t *)SBBufPtr);
+            }
+            break;
+
         /* default case already found during FC vs length test */
         default:
             CFE_EVS_SendEvent(MPU_APP_CC_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid ground command code: CC = %d",

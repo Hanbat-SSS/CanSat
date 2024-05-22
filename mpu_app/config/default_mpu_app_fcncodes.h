@@ -40,4 +40,6 @@
 #define MPU_APP_PROCESS_CC        2
 #define MPU_APP_DISPLAY_PARAM_CC  3
 #define MPU_APP_READING_CC        4
+#define MPU_APP_STOP_READING_CC   5
+
 #endif

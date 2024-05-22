@@ -36,5 +36,6 @@ CFE_Status_t MPU_APP_ProcessCmd(const MPU_APP_ProcessCmd_t *Msg);
 CFE_Status_t MPU_APP_NoopCmd(const MPU_APP_NoopCmd_t *Msg);
 CFE_Status_t MPU_APP_DisplayParamCmd(const MPU_APP_DisplayParamCmd_t *Msg);
 CFE_Status_t MPU_APP_ReadingCmd(const MPU_APP_ReadingCmd_t *Msg);
+CFE_Status_t MPU_APP_Stop_ReadingCmd(const MPU_APP_Stop_ReadingCmd_t *Msg);
 
 #endif /* MPU_APP_CMDS_H */
