@@ -260,7 +260,7 @@ CFE_Status_t MPU_APP_ReadingCmd(const MPU_APP_ReadingCmd_t *Msg)
         exit(EXIT_FAILURE);
     }
     
-    CFE_EVS_SendEvent(MPU_APP_READING_INF_EID, CFE_EVS_EventType_INFORMATION, "MPU: Reading Accel and Gyro\nax : %f  ay : %f  az : %f\ngx : %f  gy : %f  gz : %f",mpu[0], mpu[1], mpu[2], mpu[3], mpu[4], mpu[5]);
+    CFE_EVS_SendEvent(MPU_APP_READING_INF_EID, CFE_EVS_EventType_INFORMATION, "MPU: Reading Accel and Gyro");
     return CFE_SUCCESS;
 }
 
@@ -270,5 +270,12 @@ CFE_Status_t MPU_APP_Stop_ReadingCmd(const MPU_APP_Stop_ReadingCmd_t *Msg)
     pthread_join(thread, NULL);
     CFE_EVS_SendEvent(MPU_APP_STOP_READING_INF_EID, CFE_EVS_EventType_INFORMATION, "MPU: Stop_Reading Accel and Gyro");
     
+    return CFE_SUCCESS;
+}
+
+CFE_Status_t MPU_APP_Currant_DataCmd(const MPU_APP_Currant_DataCmd_t *Msg)
+{
+    CFE_EVS_SendEvent(MPU_APP_CURRANT_DATA_INF_EID, CFE_EVS_EventType_INFORMATION, "\nax : %f  ay : %f  az : %f\ngx : %f  gy : %f  gz : %f", mpu[0], mpu[1], mpu[2], mpu[3], mpu[4], mpu[5]);
+
     return CFE_SUCCESS;
 }
