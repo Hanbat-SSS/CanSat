@@ -117,6 +117,20 @@ void GPS_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             }
             break;
 
+        case GPS_APP_UNPARSING_CC:
+            if(GPS_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(GPS_APP_UnparsingCmd_t)))
+            {
+                GPS_APP_UnparsingCmd((const GPS_APP_UnparsingCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case GPS_APP_CURRANT_DATA_CC:
+            if(GPS_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(GPS_APP_Currant_DataCmd_t)))
+            {
+                GPS_APP_Currant_DataCmd((const GPS_APP_Currant_DataCmd_t *)SBBufPtr);
+            }
+            break;
+
         /* default case already found during FC vs length test */
         default:
             CFE_EVS_SendEvent(GPS_APP_CC_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid ground command code: CC = %d",

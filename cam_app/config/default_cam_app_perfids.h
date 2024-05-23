@@ -23,6 +23,6 @@
 #ifndef CAM_APP_PERFIDS_H
 #define CAM_APP_PERFIDS_H
 
-#define CAM_APP_PERF_ID 92
+#define CAM_APP_PERF_ID 91
 
 #endif

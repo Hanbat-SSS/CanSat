@@ -41,7 +41,9 @@ static const EdsDispatchTable_GPS_APP_Application_CFE_SB_Telecommand_t GPS_TC_DI
             .ResetCountersCmd_indication = GPS_APP_ResetCountersCmd,
             .ProcessCmd_indication       = GPS_APP_ProcessCmd,
             .DisplayParamCmd_indication  = GPS_APP_DisplayParamCmd,
-            .ParsingCmd_indication       = GPS_APP_ParsingCmd},
+            .ParsingCmd_indication       = GPS_APP_ParsingCmd,
+            .UnparsingCmd_indication     = GPS_APP_UnparsingCmd,
+            .CurrantDataCmd_indication   = GPS_APP_Currant_DataCmd},
     .SEND_HK = {.indication = GPS_APP_SendHkCmd}};
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/

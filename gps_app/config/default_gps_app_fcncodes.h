@@ -40,4 +40,6 @@
 #define GPS_APP_PROCESS_CC        2
 #define GPS_APP_DISPLAY_PARAM_CC  3
 #define GPS_APP_PARSING_CC        4
+#define GPS_APP_UNPARSING_CC      5
+#define GPS_APP_CURRANT_DATA_CC   6
 #endif

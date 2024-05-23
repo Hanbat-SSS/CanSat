@@ -167,8 +167,6 @@ CFE_Status_t CAM_APP_ShotPeriodCmd(const CAM_APP_ShotPeriodCmd_t *Msg)
 
     //CFE_EVS_SendEvent
     
-   
-
     return CFE_SUCCESS; 
 }
 
@@ -220,8 +218,6 @@ void stoploop(void)
 
 CFE_Status_t CAM_APP_ShotStartCmd(const CAM_APP_ShotStartCmd_t *Msg)
 {    
-    
-
     Stop_Command = 0;
 
     if(pthread_create(&thread, NULL, startloop, NULL))
@@ -236,9 +232,6 @@ CFE_Status_t CAM_APP_ShotStartCmd(const CAM_APP_ShotStartCmd_t *Msg)
 
 CFE_Status_t CAM_APP_ShotStopCmd(const CAM_APP_ShotStopCmd_t *Msg)
 {
-    //process from Shot_Stop_Cmd
-    //CFE_EVS_StopEvent
-
     stoploop();
     pthread_join(thread, NULL);
     CFE_EVS_SendEvent(CAM_APP_SHOT_STOP_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM: Send Stop_Command");

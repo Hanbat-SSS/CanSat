@@ -33,6 +33,18 @@
 #include "gps_app_utils.h"
 #include "gps_app_msg.h"
 
+#include "pthread.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
+#include <sys/fcntl.h>
+#include <termios.h>
+#include <unistd.h>
+#include <string.h>
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
 /*                                                                            */
 /*  Purpose:                                                                  */
@@ -158,9 +170,119 @@ CFE_Status_t GPS_APP_DisplayParamCmd(const GPS_APP_DisplayParamCmd_t *Msg)
 /*                                                                              */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
 
+int Stop_Command;
+pthread_t thread;
+int end_of_loop = 0;
+float coordinate[2] = {0,0};
+
+void *startloop(void *arg)
+{
+  int fd;
+  struct termios newt;
+  char *nmea_line;
+  char *parser;
+  double latitude;
+  float longitude;
+
+  fd = open("/dev/ttyS0", O_RDWR | O_NONBLOCK);
+  if (fd >= 0)
+  {
+    tcgetattr(fd, &newt);
+    newt.c_iflag &= ~IGNBRK;
+    newt.c_iflag &= ~(IXON | IXOFF | IXANY);
+    newt.c_oflag = 0;
+
+    newt.c_cflag |= (CLOCAL | CREAD);
+    newt.c_cflag |= CS8;
+    newt.c_cflag &= ~(PARENB | PARODD);
+    newt.c_cflag &= ~CSTOPB;
+
+    newt.c_lflag = 0;
+
+    newt.c_cc[VMIN]  = 0;
+    newt.c_cc[VTIME] = 0;
+    tcsetattr(fd, TCSANOW, &newt);
+
+  usleep(100000);
+
+  while(end_of_loop == 0)
+  {
+    char read_buffer[1000];
+    read(fd, &read_buffer,1000);
+    //printf("|%s|", r_buf);
+
+    nmea_line = strtok(read_buffer, "\n");
+
+    while (nmea_line != NULL)
+    {
+
+      parser = strstr(nmea_line, "$GPRMC");
+      if (parser != NULL)
+      {
+        char *token = strtok(nmea_line, ",");
+        int index = 0;
+        while (token != NULL)
+        {
+          if (index == 3)
+          {
+            latitude = atof(token);
+            printf("found latitude: %s %f\n", token, latitude);
+            coordinate[0] = latitude;
+          }
+          if (index == 5)
+          {
+            longitude = atof(token);
+            printf("found longitude: %s %f\n", token, longitude);
+            coordinate[1] = longitude;
+          }
+          token = strtok(NULL, ",");
+          index++;
+        }
+      }
+      nmea_line = strtok(NULL, "\n");
+    }
+    usleep(500000);
+  }
+  close(fd);
+  return 0;
+  }
+  else
+  {
+    printf("Port cannot be opened");
+    return 0;
+  }
+  return coordinate;
+}
+
+void stoploop(void)
+{
+    end_of_loop = 0;
+}
+
 CFE_Status_t GPS_APP_ParsingCmd(const GPS_APP_ParsingCmd_t *Msg)
 {
-    /* GPS parsing code*/
+    if(pthread_create(&thread, NULL, startloop, NULL))
+    {
+        perror("pthread_Create");
+        exit(EXIT_FAILURE);
+    }
+
+    CFE_EVS_SendEvent(GPS_APP_PARSING_INF_EID, CFE_EVS_EventType_INFORMATION, "GPS: GPS Parsing Start");
+    return CFE_SUCCESS;
+}
+
+CFE_Status_t GPS_APP_UnparsingCmd(const GPS_APP_UnparsingCmd_t *Msg)
+{
+     stoploop();
+    pthread_join(thread, NULL);
+    CFE_EVS_SendEvent(GPS_APP_UNPARSING_INF_EID, CFE_EVS_EventType_INFORMATION, "GPS: Stop GPS Parsing");
+    
+    return CFE_SUCCESS;
+}
+
+CFE_Status_t GPS_APP_Currant_DataCmd(const GPS_APP_Currant_DataCmd_t *Msg)
+{
+    CFE_EVS_SendEvent(GPS_APP_CURRANT_DATA_INF_EID, CFE_EVS_EventType_INFORMATION, "\nLatitude : %f\nLongitude : %f", coordinate[0], coordinate[1]);
 
     return CFE_SUCCESS;
 }

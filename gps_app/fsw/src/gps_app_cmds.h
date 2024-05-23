@@ -36,5 +36,7 @@ CFE_Status_t GPS_APP_ProcessCmd(const GPS_APP_ProcessCmd_t *Msg);
 CFE_Status_t GPS_APP_NoopCmd(const GPS_APP_NoopCmd_t *Msg);
 CFE_Status_t GPS_APP_DisplayParamCmd(const GPS_APP_DisplayParamCmd_t *Msg);
 CFE_Status_t GPS_APP_ParsingCmd(const GPS_APP_ParsingCmd_t *Msg);
+CFE_Status_t GPS_APP_UnparsingCmd(const GPS_APP_UnparsingCmd_t *Msg);
+CFE_Status_t GPS_APP_Currant_DataCmd(const GPS_APP_Currant_DataCmd_t *Msg);
 
 #endif /* GPS_APP_CMDS_H */

@@ -71,6 +71,17 @@ typedef struct
     CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command Header */
 } GPS_APP_ParsingCmd_t;
 
+typedef struct 
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command Header */
+} GPS_APP_UnparsingCmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command Header */
+} GPS_APP_Currant_DataCmd_t;
+
+
 /*************************************************************************/
 /*
 ** Type definition (Gps App housekeeping)
