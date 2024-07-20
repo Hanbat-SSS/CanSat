@@ -34,7 +34,6 @@
 #include "cam_app_msg.h"
 
 /* The cam_lib module provides the CAM_Function() prototype */
-#include "cam_lib.h"
 #include "time.h"
 #include "unistd.h"
 #include "pthread.h"
@@ -141,9 +140,6 @@ CFE_Status_t CAM_APP_ProcessCmd(const CAM_APP_ProcessCmd_t *Msg)
         return status;
     }
 
-    /* Invoke a function provided by CAM_APP_LIB */
-    CAM_LIB_Function();
-
     return CFE_SUCCESS;
 }
 
@@ -161,12 +157,22 @@ CFE_Status_t CAM_APP_DisplayParamCmd(const CAM_APP_DisplayParamCmd_t *Msg)
     return CFE_SUCCESS;
 }
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+/*                                                                            */
+/* A simple example command that Setting Shot Period                          */
+/*                                                                            */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+
+uint16 Period = 10;
+
 CFE_Status_t CAM_APP_ShotPeriodCmd(const CAM_APP_ShotPeriodCmd_t *Msg)
 {
-    //process for Shot_Period_Cmd
-
-    //CFE_EVS_SendEvent
+    CFE_EVS_SendEvent(CAM_APP_SHOT_PERIOD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                      "CAM_APP: Shot Period is set to %d(sec)", (int)Msg->Payload.Period);
     
+    Period = (int)Msg->Payload.Period;
+    return Period;
+
     return CFE_SUCCESS; 
 }
 
@@ -196,16 +202,16 @@ void *startloop(void *arg)
             strftime(timestamp, sizeof(timestamp), "%Y%m%d_%H:%M:%S", now);
 
             char filename[50];
-            sprintf(filename, "photo_%s.jpg", timestamp);
+            sprintf(filename, "photo_%s.png", timestamp);
 
             char command[200];
-            sprintf(command, "libcamera-jpeg -o /home/CFS/photo/%s -t 2000 --width 640 --height 480", filename);
+            sprintf(command, "libcamera-still -o /home/test2/Pictures/%s -t 1000 --width 320 --height 240 --encoding png" , filename);
 
             printf("Executing command: %s\n", command);
 
             system(command);
 
-            sleep(10);
+            sleep(Period);
         }
     }
     pthread_exit(NULL);

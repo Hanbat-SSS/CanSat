@@ -20,9 +20,6 @@ endif()
 add_cfe_app(cam_app ${APP_SRC_FILES})
 
 target_include_directories(cam_app PUBLIC fsw/inc)
-# Include the public API from cam_lib to demonstrate how
-# to call library-provided functions
-add_cfe_app_dependency(cam_app cam_lib)
 
 # Add table
 add_cfe_tables(cam_app fsw/tables/cam_app_tbl.c)
