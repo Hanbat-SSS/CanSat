@@ -130,6 +130,20 @@ void MPU_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
                 MPU_APP_Currant_DataCmd((const MPU_APP_Currant_DataCmd_t *)SBBufPtr);
             }
             break;
+
+        case MPU_APP_REWHEEL_ON_CC:
+            if(MPU_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(MPU_APP_Rewheel_OnCmd_t)))
+            {
+                MPU_APP_Rewheel_OnCmd((const MPU_APP_Rewheel_OnCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case MPU_APP_REWHEEL_OFF_CC:
+            if(MPU_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(MPU_APP_Rewheel_OffCmd_t)))
+            {
+                MPU_APP_Rewheel_OffCmd((const MPU_APP_Rewheel_OffCmd_t *)SBBufPtr);
+            }
+            break;
             
         /* default case already found during FC vs length test */
         default:

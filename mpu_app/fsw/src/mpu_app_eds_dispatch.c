@@ -43,7 +43,9 @@ static const EdsDispatchTable_MPU_APP_Application_CFE_SB_Telecommand_t MPU_TC_DI
             .DisplayParamCmd_indication  = MPU_APP_DisplayParamCmd,
             .ReadingCmd_indication       = MPU_APP_ReadingCmd,
             .StopReadingCmd_indication   = MPU_APP_Stop_ReadingCmd,
-            .CurrantDataCmd_indication   = MPU_APP_Currant_DataCmd},
+            .CurrantDataCmd_indication   = MPU_APP_Currant_DataCmd,
+            .RewheelOnCmd_indication     = MPU_APP_Rewheel_OnCmd,
+            .RewheelOffCmd_indication    = MPU_APP_Rewheel_OffCmd},
     .SEND_HK = {.indication = MPU_APP_SendHkCmd}};
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/

@@ -42,5 +42,7 @@
 #define MPU_APP_READING_CC        4
 #define MPU_APP_STOP_READING_CC   5
 #define MPU_APP_CURRANT_DATA_CC   6
+#define MPU_APP_REWHEEL_ON_CC     7
+#define MPU_APP_REWHEEL_OFF_CC    8
 
 #endif

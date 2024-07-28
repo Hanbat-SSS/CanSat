@@ -82,6 +82,15 @@ typedef struct
     CFE_MSG_CommandHeader_t CommandHeader;/**< \brief Command Header */
 } MPU_APP_Currant_DataCmd_t;
 
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader;/**< \brief Command Header */
+} MPU_APP_Rewheel_OnCmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader;/**< \brief Command Header */
+} MPU_APP_Rewheel_OffCmd_t;
 
 /*************************************************************************/
 /*

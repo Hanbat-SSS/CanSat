@@ -106,6 +106,18 @@
           <ValueConstraint entry="Sec.FunctionCode" value="6" />
         </ConstraintSet>
       </ContainerDataType>
+
+      <ContainerDataType name="Reaction_Wheel_On" baseType="CommandBase">
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="7" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="Reaction_Wheel_Off" baseType="CommandBase">
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="8" />
+        </ConstraintSet>
+      </ContainerDataType>
       
       <!-- Note the type name here must be "ExampleTable" to match the C table definition file,
            but the source code uses the type "ExampleTable" -->

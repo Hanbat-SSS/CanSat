@@ -164,10 +164,10 @@ CFE_Status_t MPU_APP_DisplayParamCmd(const MPU_APP_DisplayParamCmd_t *Msg)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
 /*                                                                              */
-/* A Mpu data reading and stop command                                                   */
+/* A Mpu data reading and stop command                                          */
 /*                                                                              */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
-int Stop_Command;
+int Stop_MPU;
 pthread_t thread;
 float mpu[6] = {0, 0, 0, 0, 0, 0};
 
@@ -189,7 +189,7 @@ void *startloop(void *arg)
     
     while (1) 
     {
-        if (Stop_Command == 1) 
+        if (Stop_MPU == 1) 
         {
         break;
         } 
@@ -245,14 +245,14 @@ void *startloop(void *arg)
 
 void stoploop(void)
 {
-    Stop_Command = 1;
+    Stop_MPU = 1;
 }
 
 CFE_Status_t MPU_APP_ReadingCmd(const MPU_APP_ReadingCmd_t *Msg)
 {
     CFE_EVS_SendEvent(MPU_APP_RESET_INF_EID, CFE_EVS_EventType_INFORMATION, "MPU: RESET command");
 
-    Stop_Command = 0;
+    Stop_MPU = 0;
 
     if(pthread_create(&thread, NULL, startloop, NULL))
     {
@@ -276,6 +276,24 @@ CFE_Status_t MPU_APP_Stop_ReadingCmd(const MPU_APP_Stop_ReadingCmd_t *Msg)
 CFE_Status_t MPU_APP_Currant_DataCmd(const MPU_APP_Currant_DataCmd_t *Msg)
 {
     CFE_EVS_SendEvent(MPU_APP_CURRANT_DATA_INF_EID, CFE_EVS_EventType_INFORMATION, "\nax : %f  ay : %f  az : %f\ngx : %f  gy : %f  gz : %f", mpu[0], mpu[1], mpu[2], mpu[3], mpu[4], mpu[5]);
+
+    return CFE_SUCCESS;
+}
+
+CFE_Status_t MPU_APP_Rewheel_OnCmd(const MPU_APP_Rewheel_OnCmd_t *Msg)
+{
+    CFE_EVS_SendEvent(MPU_APP_REWHEEL_ON_INF_EID, CFE_EVS_EventType_INFORMATION, "MPU: Reaction Wheel ON");
+
+    
+
+    return CFE_SUCCESS;
+}
+
+CFE_Status_t MPU_APP_Rewheel_OffCmd(const MPU_APP_Rewheel_OffCmd_t *Msg)
+{
+    CFE_EVS_SendEvent(MPU_APP_REWHEEL_OFF_INF_EID, CFE_EVS_EventType_INFORMATION, "MPU: Reaction Wheel OFF");
+
+    
 
     return CFE_SUCCESS;
 }
