@@ -44,7 +44,9 @@ static const EdsDispatchTable_CAM_APP_Application_CFE_SB_Telecommand_t CAM_TC_DI
             .DisplayParamCmd_indication  = CAM_APP_DisplayParamCmd,
             .ShotPeriod_indication       = CAM_APP_ShotPeriodCmd,
             .ShotStart_indication        = CAM_APP_ShotStartCmd,
-            .ShotStop_indication         = CAM_APP_ShotStopCmd,}
+            .ShotStop_indication         = CAM_APP_ShotStopCmd,
+            .SecurityStart_indication    = CAM_APP_SecurityStartCmd,
+            .SecurityStop_indication     = CAM_APP_SecurityStopCmd}
     .SEND_HK = {.indication = CAM_APP_SendHkCmd}};
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/

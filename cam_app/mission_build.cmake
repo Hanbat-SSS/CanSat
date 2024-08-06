@@ -21,6 +21,7 @@ set(CAM_APP_MISSION_CONFIG_FILE_LIST
   cam_app_tbldefs.h
   cam_app_tblstruct.h
   cam_app_topicids.h
+
 )
 
 if (CFE_EDS_ENABLED_BUILD)

@@ -42,5 +42,8 @@
 #define CAM_APP_SHOT_PERIOD_CC    4
 #define CAM_APP_SHOT_START_CC     5
 #define CAM_APP_SHOT_STOP_CC      6
+#define CAM_APP_SECURITY_START_CC  7
+#define CAM_APP_SECURITY_STOP_CC   8
+#define CAM_APP_SECURITY_KEY_CC    9
 
 #endif

@@ -82,6 +82,22 @@ typedef struct
     CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
 } CAM_APP_ShotStopCmd_t;
 
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
+} CAM_APP_SecurityStartCmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
+} CAM_APP_SecurityStopCmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
+    CAM_APP_SecurityKey_Payload_t Payload;
+} CAM_APP_SecurityKeyCmd_t;
+
 /*************************************************************************/
 /*
 ** Type definition (Cam App housekeeping)

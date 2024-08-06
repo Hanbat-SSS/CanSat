@@ -131,11 +131,34 @@ void CAM_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             }
             break;
 
+        case CAM_APP_SECURITY_START_CC:
+            if (CAM_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CAM_APP_SecurityStartCmd_t)))
+            {
+                CAM_APP_SecurityStartCmd((const CAM_APP_SecurityStartCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CAM_APP_SECURITY_STOP_CC:
+            if (CAM_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CAM_APP_SecurityStopCmd_t)))
+            {
+                CAM_APP_SecurityStopCmd((const CAM_APP_SecurityStopCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CAM_APP_SECURITY_KEY_CC:
+            if (CAM_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CAM_APP_SecurityKeyCmd_t)))
+            {
+                CAM_APP_SecurityKeyCmd((const CAM_APP_SecurityKeyCmd_t *)SBBufPtr);
+            }
+            break;
+
+
         /* default case already found during FC vs length test */
         default:
             CFE_EVS_SendEvent(CAM_APP_CC_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid ground command code: CC = %d",
                               CommandCode);
             break;
+        
     }
 }
 

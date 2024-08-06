@@ -42,6 +42,11 @@ typedef struct CAM_APP_ShotPeriod_Payload
     uint16 Period;
 } CAM_APP_ShotPeriod_Payload_t;
 
+typedef struct CAM_APP_SeucirtyKey_Payload
+{
+    char Key[32];
+} CAM_APP_SecurityKey_Payload_t;
+
 /*************************************************************************/
 /*
 ** Type definition (Cam App housekeeping)
