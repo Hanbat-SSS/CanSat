@@ -69,7 +69,6 @@ typedef struct
 typedef struct 
 {
     CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command Header */
-    MPU_APP_Reading_Payload_t Payload;     /**< \brief Telemetry payload */
 } MPU_APP_ReadingCmd_t;
 
 typedef struct 

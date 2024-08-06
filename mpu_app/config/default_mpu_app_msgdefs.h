@@ -36,12 +36,6 @@ typedef struct MPU_APP_DisplayParam_Payload
     char   ValStr[MPU_APP_STRING_VAL_LEN]; /**< An example string */
 } MPU_APP_DisplayParam_Payload_t;
 
-typedef struct MPU_APP_Reading_Payload
-{
-    uint8 accel;
-    uint8 gyro;
-} MPU_APP_Reading_Payload_t;
-
 /*************************************************************************/
 /*
 ** Type definition (Mpu App housekeeping)
@@ -52,6 +46,14 @@ typedef struct MPU_APP_HkTlm_Payload
     uint8 CommandErrorCounter;
     uint8 CommandCounter;
     uint8 spare[2];
+    float Acc_X;
+    float Acc_Y;
+    float Acc_Z;
+    float Gyro_X;
+    float Gyro_Y;
+    float Gyro_Z;
+    float Roll;
+    float Pitch;
 } MPU_APP_HkTlm_Payload_t;
 
 #endif

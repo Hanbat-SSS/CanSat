@@ -19,6 +19,8 @@ endif()
 # Create the app module
 add_cfe_app(mpu_app ${APP_SRC_FILES})
 
+target_link_libraries(mpu_app m wiringPi)
+
 # Add table
 add_cfe_tables(mpu_app fsw/tables/mpu_app_tbl.c)
 
